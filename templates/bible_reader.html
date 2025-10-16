@@ -18,14 +18,18 @@
             --header-bg: #388E3C; /* Darker green for header */
             --nav-link-color: #f0f0f0;
             --nav-link-hover: #ffffff;
+            --sidebar-width: 280px; /* Width of the sidebar */
         }
 
         body {
             font-family: 'Open Sans', sans-serif;
-            background-color: var(--background-color);
+            background-color: #f8f8f8; /* Changed to a very light grey */
             margin: 0;
             color: var(--text-color);
             line-height: 1.6;
+            display: flex; /* Use flexbox for main layout */
+            min-height: 100vh; /* Full viewport height */
+            flex-direction: column; /* Stack header, sidebar, and content */
         }
 
         .header {
@@ -37,6 +41,7 @@
             align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: relative; /* Added for absolute positioning of nav-links on mobile */
+            width: 100%; /* Header spans full width */
         }
 
         .header h1 {
@@ -45,58 +50,125 @@
             font-size: 1.8em;
         }
 
-        .header .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .header .nav-links a {
-            color: var(--nav-link-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .header .nav-links a:hover {
-            color: var(--nav-link-hover);
-        }
-
         /* Hamburger menu icon */
         .hamburger-icon {
-            display: none; /* Hidden by default */
             font-size: 2em;
             cursor: pointer;
             color: var(--nav-link-color);
+            margin-left: 20px; /* Space from logo */
+            display: none; /* Hidden by default on larger screens */
+        }
+
+        /* Main layout structure */
+        .app-layout {
+            display: flex;
+            flex-grow: 1; /* Allow app-layout to take remaining vertical space */
+            position: relative; /* For sidebar absolute positioning on mobile */
+            justify-content: flex-start; /* Ensure sidebar starts on the left */
+        }
+
+        /* Sidebar styles */
+        #sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-background);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease-in-out; /* For smooth slide animation */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        #main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto; /* Allow scrolling for main content */
+            background-color: white; /* Ensure main content is white */
         }
 
         /* Media queries for responsiveness */
         @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* Stack header, sidebar, and content */
+            }
+
+            .header {
+                order: -1; /* Ensure header is always at the top */
+                justify-content: space-between; /* Space out title and hamburger */
+            }
+
+            .header h1 {
+                flex-grow: 1; /* Allow title to take up available space */
+                text-align: left;
+            }
+
             .header .nav-links {
-                display: none; /* Hide nav links on small screens by default */
-                flex-direction: column;
-                background-color: var(--header-bg);
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                padding: 10px 0;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .header .nav-links.active {
-                display: flex; /* Show nav links when active */
-            }
-
-            .header .nav-links a {
-                padding: 10px 20px;
-                text-align: center;
-                width: 100%;
-                box-sizing: border-box;
+                display: none; /* Hide desktop nav links */
             }
 
             .hamburger-icon {
                 display: block; /* Show hamburger icon on small screens */
+                order: 1; /* Position after title */
             }
+
+            #sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                transform: translateX(-100%); /* Hide sidebar off-screen */
+                z-index: 1000;
+                width: 250px; /* Smaller width for mobile sidebar */
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            }
+
+            #sidebar.active {
+                transform: translateX(0); /* Show sidebar */
+            }
+
+            #main-content {
+                margin-left: 0; /* No margin when sidebar is hidden */
+            }
+        }
+
+        /* Overlay for when sidebar is open on mobile */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* New styles for sidebar navigation links */
+        .nav-links-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-links-sidebar a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links-sidebar a:hover {
+            color: var(--primary-color);
         }
 
         .container {
@@ -156,14 +228,14 @@
             list-style: none;
             padding: 0;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjusted min-width for better responsiveness */
+            gap: 10px; /* Reduced gap for smaller screens */
             margin-top: 20px;
         }
         .book-list li a, .translation-list li a {
             display: block;
             background-color: var(--background-color);
-            padding: 15px;
+            padding: 10px; /* Reduced padding */
             border-radius: 8px;
             text-decoration: none;
             color: var(--text-color);
@@ -171,10 +243,18 @@
             text-align: center;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            word-break: break-word; /* Ensure long words break */
+            font-size: 0.9em; /* Slightly smaller font size */
         }
-        .book-list li a:hover, .translation-list li a:hover {
-            background-color: var(--border-color);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        @media (max-width: 480px) {
+            .book-list, .translation-list {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Further reduce min-width on very small screens */
+                gap: 8px;
+            }
+            .book-list li a, .translation-list li a {
+                font-size: 0.8em; /* Even smaller font on very small screens */
+                padding: 8px; /* Further reduced padding */
+            }
         }
         .chapter-grid {
             display: grid;
@@ -276,36 +356,207 @@
                 width: 100%; /* Take full width in column layout */
             }
         }
+
+        /* New styles for book selection dropdowns */
+        .book-selection-dropdowns {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .book-selection-dropdowns label {
+            font-weight: 600;
+            margin-right: 5px;
+            color: var(--text-color);
+            flex-basis: 100%; /* Occupy full width on small screens */
+            text-align: center;
+        }
+
+        .book-selection-dropdowns select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            font-size: 1em;
+            min-width: 180px; /* Adjust as needed */
+            flex-grow: 1;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 768px) {
+            .book-selection-dropdowns label {
+                flex-basis: auto; /* Revert to auto on larger screens */
+            }
+        }
+
+        /* Styles for collapsible testament dropdowns */
+        .testament-dropdown {
+            position: relative;
+            display: inline-block; /* Or block depending on desired layout */
+            width: 100%; /* Take full width */
+            max-width: 300px; /* Max width for larger screens */
+            text-align: left;
+        }
+
+        .testament-dropdown .dropdown-toggle {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .testament-dropdown .dropdown-toggle:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .testament-dropdown .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-background);
+            min-width: 100%;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            max-height: 200px; /* Limit height and add scroll */
+            overflow-y: auto;
+            margin-top: 5px;
+        }
+
+        .testament-dropdown .dropdown-content li a {
+            color: var(--text-color);
+            padding: 8px 15px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-weight: 400;
+        }
+
+        .testament-dropdown .dropdown-content li a:hover {
+            background-color: var(--background-color);
+        }
+
+        .testament-dropdown .dropdown-content.show {
+            display: block;
+        }
+
+        /* Adjust for mobile - make dropdowns stack */
+        @media (max-width: 480px) {
+            .book-selection-dropdowns {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .testament-dropdown {
+                max-width: 100%;
+            }
+        }
+
+.welcome-section {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Study Pal Bible</h1>
-        <div class="nav-links" id="navLinks">
+        
+        <div class="hamburger-icon" onclick="toggleSidebar()">&#9776;</div> <!-- Updated onclick -->
+    </div>
+
+    <div class="app-layout">
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <h2>BibleStudyPal</h2>
+                <button type="button" class="close-sidebar" onclick="toggleSidebar()">X</button>
+            </div>
+            <div class="nav-links-sidebar">
             <a href="{{ url_for('bible_reader') }}">Home</a>
             <a href="{{ url_for('preferences') }}">Activate Daily Verse</a>
         </div>
-        <div class="hamburger-icon" onclick="toggleNav()">&#9776;</div>
+            <form action="{{ url_for('bible_reader') }}" method="GET" class="sidebar-form">
+                <label for="translation_selector">Select Translation:</label>
+                <select id="translation_selector" name="translation" onchange="this.form.submit()">
+                    {% for t in translations %}
+                        <option value="{{ t.id }}" {% if request.args.get('translation', 'KJV') == t.id %}selected{% endif %}>{{ t.name }}</option>
+                    {% endfor %}
+                </select>
+                <noscript><button type="submit">Go</button></noscript>
+            </form>
+
+            {% if books %}
+                <div class="book-selection-dropdowns">
+                    <div class="testament-dropdown">
+                        <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_list')">Old Testament &#x25BC;</button>
+                        <ul id="old_testament_books_list" class="dropdown-content">
+                            {% for book in books['Old Testament'] %}
+                                <li><a href="{{ url_for('view_chapter', translation_name=request.args.get('translation', 'KJV'), book_name=book.name, chapter_number=1) }}">{{ book.name }}</a></li>
+                            {% endfor %}
+                        </ul>
     </div>
 
+                    <div class="testament-dropdown">
+                        <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_list')">New Testament &#x25BC;</button>
+                        <ul id="new_testament_books_list" class="dropdown-content">
+                            {% for book in books['New Testament'] %}
+                                <li><a href="{{ url_for('view_chapter', translation_name=request.args.get('translation', 'KJV'), book_name=book.name, chapter_number=1) }}">{{ book.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div> 
+            {% else %}
+                <p>No books available for the selected translation. Please choose another.</p>
+            {% endif %}
+        </aside>
+
+        <main id="main-content">
     <div class="container">
         {% if chapter_data and chapter_data.verses %}
             <div class="chapter-header-controls">
-                <div class="select-group">
+      {#          <div class="select-group">
                     <label for="translation_selector_chapter">Translation:</label>
                     <select id="translation_selector_chapter" onchange="updateBookAndChapterNav()">
                         {% for t in translations %}
                             <option value="{{ t.id }}" {% if translation == t.id %}selected{% endif %}>{{ t.name }}</option>
                         {% endfor %}
-                    </select>
+                   </select>
 
-                    <label for="book_selector_chapter">Book:</label>
-                    <select id="book_selector_chapter" onchange="updateBookAndChapterNav()">
-                        {% for b in books_for_nav %}
-                            <option value="{{ b.name }}" {% if book == b.name %}selected{% endif %}>{{ b.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                         <div class="testament-dropdown">
+                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament &#x25BC;</button>
+                                <ul id="old_testament_books_chapter_list" class="dropdown-content">
+                                    <!-- Books will be populated by JavaScript -->
+                                </ul>
+                            </div>  
+
+                            <div class="testament-dropdown">
+                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_chapter_list')">New Testament &#x25BC;</button>
+                                <ul id="new_testament_books_chapter_list" class="dropdown-content">
+                                    <!-- Books will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                </div>    #}
                 <div class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
                     {% if chapter_data.chapter > 1 %}
                         <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons">&#x25C0;</a>
@@ -340,98 +591,239 @@
                 <a href="{{ url_for('bible_reader') }}?translation={{ translation }}" class="cta-button" style="display: inline-block; width: auto;">Back to Books</a>
             </p>
 
-        {% else %}
-            <div class="selection-panel">
-                <h2 style="margin-bottom: 20px;">Welcome to the Bible Reader!</h2>
-                
-                <form action="{{ url_for('bible_reader') }}" method="GET">
-                    <label for="translation_selector">Select Translation:</label>
-                    <select id="translation_selector" name="translation" onchange="this.form.submit()">
-                        {% for t in translations %}
-                            <option value="{{ t.id }}" {% if request.args.get('translation', 'KJV') == t.id %}selected{% endif %}>{{ t.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <noscript><button type="submit">Go</button></noscript>
-                </form>
 
-                {% if books %}
-                    <h2 style="margin-top: 30px;">Select a Book:</h2>
-                    <ul class="book-list">
-                        {% for book in books %}
-                            <li><a href="{{ url_for('view_chapter', translation_name=request.args.get('translation', 'KJV'), book_name=book.name, chapter_number=1) }}">{{ book.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No books available for the selected translation. Please choose another.</p>
-                {% endif %}
+
+ {% else %}
+    <div class="welcome-section" style="text-align: center; padding: 50px 20px;">
+        <h1 style="font-family: 'Merriweather', serif; color: var(--primary-color); font-size: 2.2em; margin-bottom: 15px;">
+            Welcome to BibleStudyPal
+        </h1>
+        <p style="max-width: 700px; margin: 0 auto; color: var(--light-text-color); font-size: 1.1em; line-height: 1.8;">
+            Your personal companion for reading, exploring, and reflecting on the Word of God.  
+            Choose your preferred translation and start exploring any book or chapter of the Bible.
+        </p>
+        <div style="margin-top: 30px;">
+            <a href="#sidebar" onclick="toggleSidebar()" 
+               style="display: inline-block; background-color: var(--primary-color); color: white; 
+                      padding: 12px 25px; border-radius: 8px; text-decoration: none; 
+                      font-weight: 600; transition: background-color 0.3s ease;">
+                📖 Start Reading
+            </a>
+        </div>
+    </div>
+{% endif %}
+
             </div>
-        {% endif %}
+        </main>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay" onclick="toggleSidebar()"></div>
 
         <script>
+        // Generic function to toggle dropdowns
+        function toggleTestamentDropdown(event, listId) {
+            event.stopPropagation(); // Prevent document click from closing immediately
+            const targetList = document.getElementById(listId);
+
+            // Close all other dropdowns in the same parent (main selection or chapter nav)
+            const parentDropdowns = targetList.closest('.book-selection-dropdowns') || targetList.closest('.select-group');
+            if (parentDropdowns) {
+                parentDropdowns.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+                    if (openDropdown.id !== listId) {
+                        openDropdown.classList.remove('show');
+                        openDropdown.previousElementSibling.innerHTML = openDropdown.previousElementSibling.textContent.replace(' &#x25B2;', ' &#x25BC;');
+                    }
+                });
+            }
+
+            // Toggle the clicked dropdown
+            targetList.classList.toggle('show');
+
+            // Update arrow icon
+            const toggleButton = event.currentTarget;
+            if (targetList.classList.contains('show')) {
+                toggleButton.innerHTML = toggleButton.textContent.replace(' &#x25BC;', ' &#x25B2;');
+            } else {
+                toggleButton.innerHTML = toggleButton.textContent.replace(' &#x25B2;', ' &#x25BC;');
+            }
+        }
+
+        // Close all dropdowns and sidebar if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-toggle') && !event.target.closest('.dropdown-content') && !event.target.matches('.hamburger-icon') && !event.target.closest('#sidebar')) {
+                // Close testament dropdowns
+                document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+                    openDropdown.classList.remove('show');
+                    openDropdown.previousElementSibling.innerHTML = openDropdown.previousElementSibling.textContent.replace(' &#x25B2;', ' &#x25BC;');
+                });
+                // Close sidebar on mobile if open
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.querySelector('.overlay');
+                if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            }
+        };
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
             async function updateBookAndChapterNav() {
                 var translationSelector = document.getElementById('translation_selector_chapter');
-                var bookSelector = document.getElementById('book_selector_chapter');
                 var selectedTranslation = translationSelector.value;
-                var selectedBook = bookSelector.value;
                 var currentChapter = {{ chapter_data.chapter if chapter_data else 1 }};
 
-                // If the translation changed, fetch new books
-                if (translationSelector.dataset.previousValue !== selectedTranslation) {
-                    // Fetch books for the selected translation
+            // Fetch books for the selected translation (categorized)
                     try {
                         const response = await fetch(`/get_books/${selectedTranslation}`);
-                        const books = await response.json();
-                        
-                        // Clear existing book options
-                        bookSelector.innerHTML = '';
+                const categorizedBooks = await response.json();
 
-                        // Populate book dropdown with new books
-                        books.forEach(book => {
-                            var option = document.createElement('option');
-                            option.value = book.name;
-                            option.textContent = book.name;
-                            bookSelector.appendChild(option);
-                        });
-                        // Select the first book by default if no book was previously selected or the old one isn't in the new list
-                        if (!selectedBook || !books.some(book => book.name === selectedBook)) {
-                            selectedBook = books.length > 0 ? books[0].name : 'Genesis'; // Fallback to 'Genesis' if no books
-                            bookSelector.value = selectedBook;
+                // Populate Old Testament dropdown
+                var oldTestamentList = document.getElementById('old_testament_books_chapter_list');
+                oldTestamentList.innerHTML = ''; // Clear existing options
+                categorizedBooks['Old Testament'].forEach(book => {
+                    var listItem = document.createElement('li');
+                    var anchor = document.createElement('a');
+                    anchor.href = `/${selectedTranslation}/${book.name}/${currentChapter}`;
+                    anchor.textContent = book.name;
+                    listItem.appendChild(anchor);
+                    oldTestamentList.appendChild(listItem);
+                });
+
+                // Populate New Testament dropdown
+                var newTestamentList = document.getElementById('new_testament_books_chapter_list');
+                newTestamentList.innerHTML = ''; // Clear existing options
+                categorizedBooks['New Testament'].forEach(book => {
+                    var listItem = document.createElement('li');
+                    var anchor = document.createElement('a');
+                    anchor.href = `/${selectedTranslation}/${book.name}/${currentChapter}`;
+                    anchor.textContent = book.name;
+                    listItem.appendChild(anchor);
+                    newTestamentList.appendChild(listItem);
+                });
+
+                // Attempt to pre-select the currently viewed book
+                var currentBookName = "{{ book if book else '' }}";
+                if (currentBookName) {
+                    const oldTestamentToggle = document.querySelector('#old_testament_books_chapter_list').previousElementSibling;
+                    const newTestamentToggle = document.querySelector('#new_testament_books_chapter_list').previousElementSibling;
+
+                    if (categorizedBooks['Old Testament'].some(b => b.name === currentBookName)) {
+                        // Find the anchor for the current book and potentially highlight it
+                        const currentBookAnchor = oldTestamentList.querySelector(`a[href$="/${currentBookName}/${currentChapter}"]`);
+                        if (currentBookAnchor) {
+                            currentBookAnchor.classList.add('active-book'); // Add a class for highlighting
                         }
-                    } catch (error) {
-                        console.error('Error fetching books:', error);
-                        selectedBook = 'Genesis'; // Fallback in case of error
-                        bookSelector.value = selectedBook;
+                        // Automatically open the Old Testament dropdown if the current book is in it
+                        oldTestamentList.classList.add('show');
+                        if (oldTestamentToggle) oldTestamentToggle.innerHTML = oldTestamentToggle.textContent.replace(' &#x25BC;', ' &#x25B2;');
+                    } else if (categorizedBooks['New Testament'].some(b => b.name === currentBookName)) {
+                        const currentBookAnchor = newTestamentList.querySelector(`a[href$="/${currentBookName}/${currentChapter}"]`);
+                        if (currentBookAnchor) {
+                            currentBookAnchor.classList.add('active-book');
+                        }
+                        newTestamentList.classList.add('show');
+                        if (newTestamentToggle) newTestamentToggle.innerHTML = newTestamentToggle.textContent.replace(' &#x25BC;', ' &#x25B2;');
                     }
                 }
 
-                // Ensure a book is selected before navigating
-                if (!selectedBook) {
-                    selectedBook = bookSelector.value || 'Genesis'; // Ensure a value, fallback to Genesis
-                }
-
-                // Update previous value for next change detection
-                translationSelector.dataset.previousValue = selectedTranslation;
-
-                // Construct the new URL and navigate
-                window.location.href = `/${selectedTranslation}/${selectedBook}/${currentChapter}`;
+            } catch (error) {
+                console.error('Error fetching categorized books:', error);
             }
-            // Initialize previous translation value
+
+            // Helper function to handle book selection from dropdowns and navigate
+            window.selectBookFromChapterNavDropdown = function(selectElement) {
+                var selectedBook = selectElement.value; // This will no longer be a select element
+                // Instead, the link in the <li> already handles navigation
+                // This function is now effectively deprecated or needs re-purposing.
+                // For now, we'll ensure the correct navigation path.
+                // This will be called by the `onclick` on the `a` tag in the populated list.
+                // We need to stop the propagation of click events from the <a> tags if needed to prevent immediate closing.
+            };
+
+            // Ensure previous value for translation is updated
+                translationSelector.dataset.previousValue = selectedTranslation;
+        }
+
+        // Initial call to set up books when the page loads, if a chapter is being viewed
             document.addEventListener('DOMContentLoaded', () => {
                 const translationSelector = document.getElementById('translation_selector_chapter');
                 if (translationSelector) {
                     translationSelector.dataset.previousValue = translationSelector.value;
+                    if ({{ (chapter_data is defined and chapter_data.verses is defined and chapter_data.verses is not none) | tojson }}) { // Only call if a chapter is displayed
+                        updateBookAndChapterNav();
+                    }
                 }
-            });
 
-            function toggleNav() {
-                var navLinks = document.getElementById("navLinks");
-                if (navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                } else {
-                    navLinks.classList.add('active');
+            // Call updateBookAndChapterNav on initial load for the main sidebar book selection
+            const mainTranslationSelector = document.getElementById('translation_selector');
+            if (mainTranslationSelector) {
+                // Simulate initial load for main book selection
+                // We need a separate function for the main book selection dropdowns to populate them correctly
+                // Since the main book selection is now also using collapsible lists, we need to populate them
+                // when the translation changes on the main page, or on initial load if no chapter data.
+                // This will be handled by the updateBookAndChapterNav for chapter selector, or a new function
+                // for the main selector. Let's create a new function for the main selector to keep concerns separate.
+                function populateMainBookDropdowns() {
+                    const currentTranslation = mainTranslationSelector.value;
+                    fetch(`/get_books/${currentTranslation}`)
+                        .then(response => response.json())
+                        .then(categorizedBooks => {
+                            const oldTestamentList = document.getElementById('old_testament_books_list');
+                            const newTestamentList = document.getElementById('new_testament_books_list');
+
+                            oldTestamentList.innerHTML = '';
+                            categorizedBooks['Old Testament'].forEach(book => {
+                                const listItem = document.createElement('li');
+                                const anchor = document.createElement('a');
+                                anchor.href = `/${currentTranslation}/${book.name}/1`;
+                                anchor.textContent = book.name;
+                                listItem.appendChild(anchor);
+                                oldTestamentList.appendChild(listItem);
+                            });
+
+                            newTestamentList.innerHTML = '';
+                            categorizedBooks['New Testament'].forEach(book => {
+                                const listItem = document.createElement('li');
+                                const anchor = document.createElement('a');
+                                anchor.href = `/${currentTranslation}/${book.name}/1`;
+                                anchor.textContent = book.name;
+                                listItem.appendChild(anchor);
+                                newTestamentList.appendChild(listItem);
+                            });
+                        })
+                        .catch(error => console.error('Error populating main book dropdowns:', error));
                 }
+
+                // Call on initial load
+                populateMainBookDropdowns();
+
+                // Set up event listener for translation change
+                mainTranslationSelector.onchange = function() {
+                    populateMainBookDropdowns();
+                    // Also, close any open book dropdowns when translation changes
+                    document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+                        openDropdown.classList.remove('show');
+                        openDropdown.previousElementSibling.innerHTML = openDropdown.previousElementSibling.textContent.replace(' &#x25B2;', ' &#x25BC;');
+                    });
+                };
+            }
+        });
+
+        // New function to handle selection from the main book selection dropdowns
+        function selectBookFromDropdown(selectElement) {
+            // This function is no longer needed as direct links are used.
+            // The anchor tags in the dropdowns now directly handle navigation.
             }
         </script>
-    </div>
 </body>
 </html>
+
+
