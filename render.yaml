@@ -7,7 +7,7 @@ services:
     env: python
     region: oregon # Specify a region, e.g., oregon
     plan: free # Explicitly set to free plan
-    pythonVersion: 3.13.4 # Using a specific stable Python version
+    pythonVersion: 3.12.0 # Using a specific stable Python version
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn main:app"
     disk:
@@ -15,8 +15,6 @@ services:
       mountPath: /var/data
       sizeGB: 1 # Allocate 1GB of persistent storage
     envVars:
-      - key: FFMPEG_PATH
-        value: /usr/bin/ffmpeg
       - key: TWILIO_ACCOUNT_SID
         sync: false
       - key: TWILIO_AUTH_TOKEN
