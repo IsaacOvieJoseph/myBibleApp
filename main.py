@@ -16,8 +16,8 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY', 'supersecret') # Use an environme
 @app.route('/')
 def bible_reader():
     translations = get_all_translations()
-    books = get_books_for_translation("KJV") # Default to KJV for initial book list
-    return render_template('bible_reader.html', translations=translations, books=books)
+    categorized_books = get_books_for_translation("KJV") # Default to KJV for initial book list
+    return render_template('bible_reader.html', translations=translations, books=categorized_books)
 
 @app.route('/<string:translation_name>/<string:book_name>/<int:chapter_number>')
 def view_chapter(translation_name, book_name, chapter_number):
@@ -31,10 +31,14 @@ def view_chapter(translation_name, book_name, chapter_number):
             chapter_data['chapter'] = 1 # Default to 1 if conversion fails
 
     # Fetch all books for navigation sidebar/dropdown (assuming same for all translations for simplicity)
-    books_for_nav = get_books_for_translation(translation_name)
-    
-    # Find current book to determine total chapters for next/prev logic
-    current_book_info = next((book for book in books_for_nav if book['name'].lower() == book_name.lower()), None)
+    categorized_books_for_nav = get_books_for_translation(translation_name)
+
+    current_book_info = None
+    for testament, book_list in categorized_books_for_nav.items():
+        current_book_info = next((book for book in book_list if book['name'].lower() == book_name.lower()), None)
+        if current_book_info:
+            break
+
     total_chapters = int(current_book_info['chapters']) if current_book_info and 'chapters' in current_book_info else 100 # Default if not found, ensure int
 
     return render_template('bible_reader.html',
@@ -42,7 +46,7 @@ def view_chapter(translation_name, book_name, chapter_number):
                            translation=translation_name,
                            book=book_name,
                            chapter=chapter_number,
-                           books_for_nav=books_for_nav,
+                           books_for_nav=categorized_books_for_nav, # Pass categorized books
                            total_chapters=total_chapters,
                            translations=get_all_translations()) # Pass all translations here as well
 
