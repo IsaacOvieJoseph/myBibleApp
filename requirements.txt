@@ -1,9 +1,0 @@
-
-requests
-python-dotenv
-schedule
-twilio
-gTTS
-pydub
-GitPython
-Flask
