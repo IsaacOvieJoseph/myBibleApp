@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preferences Saved</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #388E3C;
+            --background-color: #e8f5e9;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --border-color: #cccccc;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .button-link {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .button-link:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .button-link:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Success!</h1>
+        <p>Your daily Bible verse preferences have been saved.</p>
+        <a href="/" class="button-link">Go back to set/update preferences</a>
+    </div>
+</body>
+</html>

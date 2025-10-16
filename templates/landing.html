@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Study Pal - Your Daily Scripture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #66BB6A;
+            --background-color: #e8f5e9;
+            --text-color: #333;
+            --light-text-color: #666;
+            --card-background: #fff;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--shadow-light);
+            width: 100%;
+            max-width: 700px;
+            margin: 20px;
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.8em;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .verse-of-the-day-landing {
+            background-color: #f0f4f8;
+            border-left: 6px solid var(--primary-color);
+            padding: 25px;
+            margin: 30px auto;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-style: italic;
+            color: var(--light-text-color);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            max-width: 500px;
+            text-align: left;
+        }
+        .verse-of-the-day-landing p {
+            margin: 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Study Pal!</h1>
+        <p class="tagline">Your daily companion for spiritual growth.</p>
+
+        <div class="verse-of-the-day-landing">
+            <p class="verse-text">"{{ verse_of_the_day.text | safe }}"</p>
+            <p class="verse-reference">— {{ verse_of_the_day.reference }} ({{ verse_of_the_day.translation }})</p>
+        </div>
+
+        <p>Get personalized Bible verses delivered directly to your preferred communication channel.</p>
+        <a href="{{ url_for('preferences') }}" class="cta-button">Activate Study Pal</a>
+    </div>
+</body>
+</html>

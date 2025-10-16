@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Daily Bible App Preferences</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #66BB6A;
+            --background-color: #e8f5e9;
+            --text-color: #333;
+            --light-text-color: #666;
+            --border-color: #c8e6c9;
+            --card-background: #fff;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--shadow-light);
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            position: relative; /* Needed for absolute positioning of back button */
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .verse-of-the-day {
+            background-color: #f0f4f8;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-style: italic;
+            color: var(--light-text-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .verse-of-the-day p {
+            margin: 0;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        .messages li {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .messages li.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .messages li.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        input[type="tel"],
+        input[type="time"],
+        input[type="text"],
+        .select2-container--default .select2-selection--multiple {
+            width: calc(100% - 22px); 
+            padding: 12px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+        input[type="tel"]:focus,
+        input[type="time"]:focus,
+        input[type="text"]:focus,
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        /* Specific Select2 adjustments */
+        .select2-container--default .select2-selection--multiple {
+            min-height: 44px; /* Align with input height */
+            display: flex; /* Flex to align tags */
+            align-items: center; /* Vertically center tags */
+            flex-wrap: wrap; /* Allow tags to wrap */
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: var(--secondary-color);
+            color: white;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            padding: 4px 10px;
+            margin: 4px 4px 4px 0; /* Adjust spacing */
+            font-size: 0.9em;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #fff;
+            float: right;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+            color: #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+
+        .back-button-repositioned {
+            position: absolute;
+            top: 20px; /* Adjust as needed */
+            left: 20px; /* Adjust as needed */
+            margin-bottom: 20px; /* Added margin to push content below */
+            background-color: #eff3f7; /* Updated background color */
+            color: #883939; /* Updated text/icon color */
+            width: auto; /* Allow width to be determined by content */
+            padding: 10px 20px; /* Original padding */
+            border-radius: 6px; /* Original border-radius */
+            cursor: pointer;
+            border: none;
+            font-size: 1em; /* Standard font size */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Add transition */
+            z-index: 10; /* Ensure it stays on top */
+        }
+        .back-button-repositioned:hover {
+            background-color: #5a6268; /* Slightly darker gray on hover */
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button onclick="history.back()" class="back-button-repositioned">Back</button>
+
+        <h1>Set Your Bible Verse Preferences</h1>
+        
+        <div class="verse-of-the-day" style="margin-top: 50px;"> <!-- Adjusted margin-top for h1 to avoid overlap -->
+            <p>{{ verse_of_the_day | safe }}</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('preferences') }}">
+            <div class="form-group">
+                <label for="phone_number">Phone Number (E.164 format, e.g., +1234567890):</label>
+                <input type="tel" id="phone_number" name="phone_number" required placeholder="+1234567890">
+            </div>
+            
+            <div class="form-group">
+                <label for="preferred_method">Preferred Delivery Method:</label>
+                <select id="preferred_method" name="preferred_method" required>
+                    <option value="whatsapp_text">WhatsApp Text</option>
+                    <option value="whatsapp_voice_note">WhatsApp Voice Note</option>
+                    <option value="call">Call</option>
+                    <option value="sms">SMS</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="delivery_time">Preferred Delivery Time (HH:MM - 24hr format):</label>
+                <input type="time" id="delivery_time" name="delivery_time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bible_translation">Select up to 7 Bible Translations:</label>
+                <select class="js-example-basic-multiple" id="bible_translation" name="bible_translation" multiple="multiple" data-maximum-selection-length="7" required>
+                    {% for translation in available_translations %}
+                        <option value="{{ translation.id }}">{{ translation.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="verse_preference">Verse Preference (e.g., john 3:16, random):</label>
+                <input type="text" id="verse_preference" name="verse_preference" value="random" required>
+            </div>
+            
+            <button type="submit">Save / Update Preferences</button>
+        </form>
+    </div>
+
+    <!-- jQuery (required by Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2({
+                placeholder: "Select translations",
+                maximumSelectionLength: 7
+            });
+
+            // Optional: Pre-select user's existing translations if editing
+            // This would require passing the user's current selections from main.py
+            // to the template and then setting them here.
+            // Example:
+            // var userTranslations = ["KJV", "WEB"];
+            // $('.js-example-basic-multiple').val(userTranslations).trigger('change');
+        });
+    </script>
+</body>
+</html>
