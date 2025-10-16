@@ -5,13 +5,12 @@ services:
   - type: web
     name: study-pal-bible-app
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn main:app" # Replace 'main:app' with your actual Flask app entry point if different
+    pythonVersion: 3.11.x # Using a stable Python version
+    buildCommand: "pip install -r requirements.txt && apt-get update && apt-get install -y ffmpeg" # Install ffmpeg
+    startCommand: "gunicorn main:app" # Ensure this points to your Flask app in main.py
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.x # Or your preferred Python version
       - key: TWILIO_ACCOUNT_SID
-        sync: false # Set this to true to sync with your Render dashboard, or manually add its value after deployment
+        sync: false
       - key: TWILIO_AUTH_TOKEN
         sync: false
       - key: TWILIO_PHONE_NUMBER
