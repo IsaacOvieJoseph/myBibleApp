@@ -7,4 +7,3 @@ gTTS
 pydub
 GitPython
 gunicorn
-pyaudioop
