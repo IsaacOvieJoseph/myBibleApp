@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from database import init_db, add_user, update_user_preferences, get_user_preferences
 import os
 from dotenv import load_dotenv
-from app import get_random_verse, get_chapter_content, get_all_translations, get_books_for_translation, AVAILABLE_TRANSLATIONS # Import new functions and AVAILABLE_TRANSLATIONS
+from utils import get_random_verse, get_chapter_content, get_all_translations, get_books_for_translation, AVAILABLE_TRANSLATIONS # Import new functions and AVAILABLE_TRANSLATIONS
 
 load_dotenv()
 
