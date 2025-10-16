@@ -1,0 +1,22 @@
+# This file is used to deploy your application to Render.
+# It defines a single web service for your Flask application.
+
+services:
+  - type: web
+    name: study-pal-bible-app
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn main:app" # Replace 'main:app' with your actual Flask app entry point if different
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.x # Or your preferred Python version
+      - key: TWILIO_ACCOUNT_SID
+        sync: false # Set this to true to sync with your Render dashboard, or manually add its value after deployment
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: TWILIO_WHATSAPP_NUMBER
+        sync: false
+      - key: GIT_PAT
+        sync: false # This is sensitive and should be set in Render dashboard
