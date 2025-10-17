@@ -401,8 +401,8 @@
         }
 
         .testament-dropdown .dropdown-toggle {
-            background-color: var(--primary-color);
-            color: white;
+            background-color: #ffffff;
+            color: #2b2424;
             padding: 10px 15px;
             font-size: 1em;
             border: none;
@@ -417,7 +417,7 @@
         }
 
         .testament-dropdown .dropdown-toggle:hover {
-            background-color: var(--secondary-color);
+            background-color: #d0e0d0;
         }
 
         .testament-dropdown .dropdown-content {
@@ -446,13 +446,34 @@
             font-weight: 400;
         }
 
-        .testament-dropdown .dropdown-content li a:hover {
+  /*      .testament-dropdown .dropdown-content li a:hover {
             background-color: var(--background-color);
         }
 
         .testament-dropdown .dropdown-content.show {
             display: block;
         }
+*/
+
+
+/* Accordion animation for dropdowns */
+.testament-dropdown .dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+
+.testament-dropdown .dropdown-content.show {
+    display: block;
+    max-height: 400px; /* enough space for full list */
+    opacity: 1;
+}
+
+
+
+
+
 
         /* Adjust for mobile - make dropdowns stack */
         @media (max-width: 480px) {
@@ -496,6 +517,10 @@
             <a href="{{ url_for('bible_reader') }}">Home</a>
             <a href="{{ url_for('preferences') }}">Activate Daily Verse</a>
         </div>
+
+
+            {% if books %}
+
             <form action="{{ url_for('bible_reader') }}" method="GET" class="sidebar-form">
                 <label for="translation_selector">Select Translation:</label>
                 <select id="translation_selector" name="translation" onchange="this.form.submit()">
@@ -506,7 +531,11 @@
                 <noscript><button type="submit">Go</button></noscript>
             </form>
 
-            {% if books %}
+
+
+
+
+
                 <div class="book-selection-dropdowns">
                     <div class="testament-dropdown">
                         <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_list')">Old Testament &#x25BC;</button>
@@ -527,7 +556,36 @@
                     </div>
                 </div> 
             {% else %}
-                <p>No books available for the selected translation. Please choose another.</p>
+          {#      <p>No books available for the selected translation. Please choose another.</p> #}
+
+
+
+          <div class="select-group">
+                    <label for="translation_selector_chapter">Translation:</label>
+                    <select id="translation_selector_chapter" onchange="updateBookAndChapterNav()">
+                        {% for t in translations %}
+                            <option value="{{ t.id }}" {% if translation == t.id %}selected{% endif %}>{{ t.name }}</option>
+                        {% endfor %}
+                   </select>
+
+                         <div class="testament-dropdown">
+                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament &#x25BC;</button>
+                                <ul id="old_testament_books_chapter_list" class="dropdown-content">
+                                    <!-- Books will be populated by JavaScript -->
+                                </ul>
+                            </div>  
+
+                            <div class="testament-dropdown">
+                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_chapter_list')">New Testament &#x25BC;</button>
+                                <ul id="new_testament_books_chapter_list" class="dropdown-content">
+                                    <!-- Books will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                </div>    
+
+
+
+
             {% endif %}
         </aside>
 
@@ -622,32 +680,66 @@
 
         <script>
         // Generic function to toggle dropdowns
-        function toggleTestamentDropdown(event, listId) {
-            event.stopPropagation(); // Prevent document click from closing immediately
-            const targetList = document.getElementById(listId);
+        // function toggleTestamentDropdown(event, listId) {
+        //     event.stopPropagation(); // Prevent document click from closing immediately
+        //     const targetList = document.getElementById(listId);
 
-            // Close all other dropdowns in the same parent (main selection or chapter nav)
-            const parentDropdowns = targetList.closest('.book-selection-dropdowns') || targetList.closest('.select-group');
-            if (parentDropdowns) {
-                parentDropdowns.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
-                    if (openDropdown.id !== listId) {
-                        openDropdown.classList.remove('show');
-                        openDropdown.previousElementSibling.innerHTML = openDropdown.previousElementSibling.textContent.replace(' &#x25B2;', ' &#x25BC;');
-                    }
-                });
+        //     // Close all other dropdowns in the same parent (main selection or chapter nav)
+        //     const parentDropdowns = targetList.closest('.book-selection-dropdowns') || targetList.closest('.select-group');
+        //     if (parentDropdowns) {
+        //         parentDropdowns.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+        //             if (openDropdown.id !== listId) {
+        //                 openDropdown.classList.remove('show');
+        //                 openDropdown.previousElementSibling.innerHTML = openDropdown.previousElementSibling.textContent.replace(' &#x25B2;', ' &#x25BC;');
+        //             }
+        //         });
+        //     }
+
+        //     // Toggle the clicked dropdown
+        //     targetList.classList.toggle('show');
+
+        //     // Update arrow icon
+        //     const toggleButton = event.currentTarget;
+        //     if (targetList.classList.contains('show')) {
+        //         toggleButton.innerHTML = toggleButton.textContent.replace(' &#x25BC;', ' &#x25B2;');
+        //     } else {
+        //         toggleButton.innerHTML = toggleButton.textContent.replace(' &#x25B2;', ' &#x25BC;');
+        //     }
+        // }
+
+
+// Accordion-style dropdown toggle with animation
+function toggleTestamentDropdown(event, listId) {
+    event.stopPropagation();
+    const targetList = document.getElementById(listId);
+    const parentDropdowns = targetList.closest('.book-selection-dropdowns') || targetList.closest('.select-group');
+
+    // Close others
+    if (parentDropdowns) {
+        parentDropdowns.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+            if (openDropdown.id !== listId) {
+                openDropdown.classList.remove('show');
+                openDropdown.style.maxHeight = null;
+                openDropdown.previousElementSibling.innerHTML = openDropdown.previousElementSibling.textContent.replace(' ▲', ' ▼');
             }
+        });
+    }
 
-            // Toggle the clicked dropdown
-            targetList.classList.toggle('show');
+    // Toggle this one
+    targetList.classList.toggle('show');
+    const toggleButton = event.currentTarget;
 
-            // Update arrow icon
-            const toggleButton = event.currentTarget;
-            if (targetList.classList.contains('show')) {
-                toggleButton.innerHTML = toggleButton.textContent.replace(' &#x25BC;', ' &#x25B2;');
-            } else {
-                toggleButton.innerHTML = toggleButton.textContent.replace(' &#x25B2;', ' &#x25BC;');
-            }
-        }
+    if (targetList.classList.contains('show')) {
+        targetList.style.maxHeight = targetList.scrollHeight + "px";
+        toggleButton.innerHTML = toggleButton.textContent.replace(' ▼', ' ▲');
+    } else {
+        targetList.style.maxHeight = null;
+        toggleButton.innerHTML = toggleButton.textContent.replace(' ▲', ' ▼');
+    }
+}
+
+
+
 
         // Close all dropdowns and sidebar if clicked outside
         window.onclick = function(event) {
