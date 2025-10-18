@@ -664,7 +664,7 @@ hr {
                 </div>    
                 <div class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
                     {% if chapter_data.chapter > 1 %}
-                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto; width: 30%"></a>
+                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto; width: 50%"></a>
                     {% else %}
                         <span></span>
                     {% endif %}
