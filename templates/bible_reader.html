@@ -139,6 +139,7 @@
                 z-index: 1000;
                 width: 250px; /* Smaller width for mobile sidebar */
                 box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+                overflow-y: auto;
             }
 
             #sidebar.active {
@@ -473,8 +474,8 @@
             margin: 0;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            max-height: 200px; /* Limit height and add scroll */
-            overflow-y: auto;
+            /* max-height: 200px; /* Limit height and add scroll */
+            /*overflow-y: scroll; */
             margin-top: 5px;
         }
 
