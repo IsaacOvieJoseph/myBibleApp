@@ -134,7 +134,7 @@
                 position: fixed;
                 top: 0;
                 left: 0;
-                height: 100vh;
+                height: 100%;
                 transform: translateX(-100%); /* Hide sidebar off-screen */
                 z-index: 1000;
                 width: 250px; /* Smaller width for mobile sidebar */
@@ -211,17 +211,17 @@
             font-family: 'Merriweather', serif;
             color: var(--primary-color);
             margin: 0;
-            font-size: 1.8em;
+            font-size: 1.2em;
             text-align: center;
         }
 
         .chapter-navigation .nav-buttons a {
             display: inline-block;
-            padding: 8px 15px;
+            padding: 8px;
             background-color: transparent; /* Make background transparent */
             color: var(--primary-color); /* Set icon color to primary theme color */
             text-decoration: none; /* Remove underline */
-            border-radius: 5px;
+            /* border-radius: 5px; */
             margin-left: 10px;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
@@ -695,7 +695,7 @@ hr {
 
 
 
-            <div class="chapter-content">
+            <div class="chapter-content" style="text-align: justify;">
                 {% for verse in chapter_data.verses %}
                     <p><span class="verse-number">{{ verse.verse }}.</span> {{ verse.text | safe }}</p>
                 {% endfor %}
