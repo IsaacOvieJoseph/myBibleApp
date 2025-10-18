@@ -51,7 +51,7 @@
         }
 
         /* Hamburger menu icon */
-        .hamburger-icon ,.close-sidebar{
+        .hamburger-icon , .close-sidebar, #start-reading {
             font-size: 2em;
             cursor: pointer;
             color: var(--nav-link-color);
@@ -101,6 +101,15 @@
         @media (max-width: 768px) {
             body {
                 flex-direction: column; /* Stack header, sidebar, and content */
+            }
+
+            #start-reading{
+                display: block;
+                justify-self: center;
+                width: 80%;
+                height: auto;
+                font-size: medium;
+
             }
 
             .header {
@@ -271,6 +280,7 @@
             grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
             gap: 10px;
             margin-top: 20px;
+            margin-bottom: 40px;
         }
         .chapter-grid a {
             display: flex;
@@ -334,10 +344,9 @@
         .chapter-header-controls {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            /* gap: 15px; */
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
         }
 
         .chapter-header-controls .select-group {
@@ -622,28 +631,18 @@ hr {
         {% if chapter_data and chapter_data.verses %}
             <div class="chapter-header-controls">
 
-
-
-
-
-
-
-
-
-
-
-      {#          <div class="select-group">
-                    <label for="translation_selector_chapter">Translation:</label>
-                    <select id="translation_selector_chapter" onchange="updateBookAndChapterNav()">
+              <div class="select-group">
+                    <label for="translation_select">Translation:</label>
+                    <select id="translation_select" onchange="updateBookAndChapterNav()">
                         {% for t in translations %}
                             <option value="{{ t.id }}" {% if translation == t.id %}selected{% endif %}>{{ t.name }}</option>
                         {% endfor %}
                    </select>
 
-                         <div class="testament-dropdown">
+                       {#  <div class="testament-dropdown">
                                 <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament</button>
                                 <ul id="old_testament_books_chapter_list" class="dropdown-content">
-                                    <!-- Books will be populated by JavaScript -->
+                                    <!-- Books will be populated by JavaScript --> 
                                 </ul>
                             </div>  <hr>
 
@@ -652,21 +651,23 @@ hr {
                                 <ul id="new_testament_books_chapter_list" class="dropdown-content">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
-                            </div> <hr>
-                </div>    #}
+                            </div> <hr> #}
+                </div>    
                 <div class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
                     {% if chapter_data.chapter > 1 %}
                         <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto"></a>
                     {% else %}
                         <span></span>
                     {% endif %}
-                    <h2>{{ chapter_data.book_name }} {{ chapter_data.chapter }} ({{ chapter_data.translation }})</h2>
+                    <h2>{{ chapter_data.book_name }} {{ chapter_data.chapter }} </h2>
+                    
                     {% if chapter_data.chapter < total_chapters %}
                         <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter + 1) }}" class="nav-buttons"><img src="{{ url_for('static', filename='images/nextNav.png') }}" alt="next" style="max-width:50px; height: auto"></a>
                     {% else %}
                         <span></span>
                     {% endif %}
                 </div>
+                <!-- <h4 style="text-align: center; margin: -5px; color:#6ed9a3">({{ chapter_data.translation }})</h4> -->
             </div>
 
 
@@ -716,7 +717,7 @@ hr {
             Your personal companion for reading, exploring, and reflecting on the Word of God.  
             Choose your preferred translation and start exploring any book or chapter of the Bible.
         </p>
-        <div style="margin-top: 30px;">
+        <div id="start-reading" style="margin-top: 30px;">
             <a href="#sidebar" onclick="toggleSidebar()" 
                style="display: inline-block; background-color: var(--primary-color); color: white; 
                       padding: 12px 25px; border-radius: 8px; text-decoration: none; 
@@ -971,6 +972,18 @@ function toggleTestamentDropdown(event, listId) {
             // This function is no longer needed as direct links are used.
             // The anchor tags in the dropdowns now directly handle navigation.
             }
+
+    {% if chapter_data is defined %}
+    const translationSelect = document.getElementById("translation_select");
+
+    translationSelect.addEventListener("change", function() {
+      const selectedTranslation = this.value;
+      const currentBook = "{{ book }}";
+      const currentChapter = "{{ chapter_data.chapter }}";
+      console.log(currentBook)
+      window.location.href = `/${selectedTranslation}/${currentBook}/${currentChapter}`;
+    });
+    {% endif %}
         </script>
 </body>
 </html>
