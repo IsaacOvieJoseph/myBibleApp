@@ -51,7 +51,7 @@
         }
 
         /* Hamburger menu icon */
-        .hamburger-icon {
+        .hamburger-icon ,.close-sidebar{
             font-size: 2em;
             cursor: pointer;
             color: var(--nav-link-color);
@@ -87,6 +87,15 @@
             overflow-y: auto; /* Allow scrolling for main content */
             background-color: white; /* Ensure main content is white */
         }
+
+
+
+/* .nav-buttons a img{
+    width: 30px;
+        /* max-width: ; */
+ /*   height: auto;
+} */
+
 
         /* Media queries for responsiveness */
         @media (max-width: 768px) {
@@ -194,6 +203,7 @@
             color: var(--primary-color);
             margin: 0;
             font-size: 1.8em;
+            text-align: center;
         }
 
         .chapter-navigation .nav-buttons a {
@@ -275,8 +285,16 @@
             transition: background-color 0.3s ease;
         }
         .chapter-grid a:hover {
+            background-color: #a0dfc0;;
+            color: white;
+        }
+        /* ✅ Highlight the current chapter automatically */
+        .chapter-grid a.active-chapter {
+            /* background-color: #6dac8e; */
             background-color: var(--secondary-color);
             color: white;
+            border-color: #198754;
+            font-weight: 600;
         }
 
         /* New styles for translation and book selection */
@@ -328,6 +346,11 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 10px;
+        }
+
+        .select-group > *{
+            margin-bottom: 15px;
+            justify-items: left;
         }
 
         .chapter-header-controls label {
@@ -446,10 +469,10 @@
             font-weight: 400;
         }
 
-  /*      .testament-dropdown .dropdown-content li a:hover {
+        .testament-dropdown .dropdown-content li a:hover {
             background-color: var(--background-color);
         }
-
+/*
         .testament-dropdown .dropdown-content.show {
             display: block;
         }
@@ -471,7 +494,9 @@
 }
 
 
-
+option {
+    width: "70px";
+}
 
 
 
@@ -496,7 +521,9 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-
+hr {
+  width: 100%;
+}
 
 
     </style>
@@ -523,7 +550,7 @@
 
             <form action="{{ url_for('bible_reader') }}" method="GET" class="sidebar-form">
                 <label for="translation_selector">Select Translation:</label>
-                <select id="translation_selector" name="translation" onchange="this.form.submit()">
+                <select style="height:70%; width: 90%;" id="translation_selector" name="translation" onchange="this.form.submit()">
                     {% for t in translations %}
                         <option value="{{ t.id }}" {% if request.args.get('translation', 'KJV') == t.id %}selected{% endif %}>{{ t.name }}</option>
                     {% endfor %}
@@ -538,22 +565,23 @@
 
                 <div class="book-selection-dropdowns">
                     <div class="testament-dropdown">
-                        <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_list')">Old Testament &#x25BC;</button>
+                        <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_list')">Old Testament</button>
                         <ul id="old_testament_books_list" class="dropdown-content">
                             {% for book in books['Old Testament'] %}
                                 <li><a href="{{ url_for('view_chapter', translation_name=request.args.get('translation', 'KJV'), book_name=book.name, chapter_number=1) }}">{{ book.name }}</a></li>
                             {% endfor %}
                         </ul>
-    </div>
+    </div>  <hr>
+
 
                     <div class="testament-dropdown">
-                        <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_list')">New Testament &#x25BC;</button>
+                        <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_list')">New Testament</button>
                         <ul id="new_testament_books_list" class="dropdown-content">
                             {% for book in books['New Testament'] %}
                                 <li><a href="{{ url_for('view_chapter', translation_name=request.args.get('translation', 'KJV'), book_name=book.name, chapter_number=1) }}">{{ book.name }}</a></li>
                             {% endfor %}
                         </ul>
-                    </div>
+                    </div> <hr>
                 </div> 
             {% else %}
           {#      <p>No books available for the selected translation. Please choose another.</p> #}
@@ -562,25 +590,25 @@
 
           <div class="select-group">
                     <label for="translation_selector_chapter">Translation:</label>
-                    <select id="translation_selector_chapter" onchange="updateBookAndChapterNav()">
+                    <select style="width: 90%;height: 20%;margin-bottom: 5%;" id="translation_selector_chapter" onchange="updateBookAndChapterNav()">
                         {% for t in translations %}
                             <option value="{{ t.id }}" {% if translation == t.id %}selected{% endif %}>{{ t.name }}</option>
                         {% endfor %}
                    </select>
 
                          <div class="testament-dropdown">
-                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament &#x25BC;</button>
+                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament</button>
                                 <ul id="old_testament_books_chapter_list" class="dropdown-content">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
-                            </div>  
+                            </div>  <hr>
 
                             <div class="testament-dropdown">
-                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_chapter_list')">New Testament &#x25BC;</button>
+                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_chapter_list')">New Testament</button>
                                 <ul id="new_testament_books_chapter_list" class="dropdown-content">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
-                            </div>
+                            </div>  <hr>
                 </div>    
 
 
@@ -593,6 +621,17 @@
     <div class="container">
         {% if chapter_data and chapter_data.verses %}
             <div class="chapter-header-controls">
+
+
+
+
+
+
+
+
+
+
+
       {#          <div class="select-group">
                     <label for="translation_selector_chapter">Translation:</label>
                     <select id="translation_selector_chapter" onchange="updateBookAndChapterNav()">
@@ -602,33 +641,48 @@
                    </select>
 
                          <div class="testament-dropdown">
-                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament &#x25BC;</button>
+                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament</button>
                                 <ul id="old_testament_books_chapter_list" class="dropdown-content">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
-                            </div>  
+                            </div>  <hr>
 
                             <div class="testament-dropdown">
-                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_chapter_list')">New Testament &#x25BC;</button>
+                                <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_chapter_list')">New Testament</button>
                                 <ul id="new_testament_books_chapter_list" class="dropdown-content">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
-                            </div>
+                            </div> <hr>
                 </div>    #}
                 <div class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
                     {% if chapter_data.chapter > 1 %}
-                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons">&#x25C0;</a>
+                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto"></a>
                     {% else %}
                         <span></span>
                     {% endif %}
                     <h2>{{ chapter_data.book_name }} {{ chapter_data.chapter }} ({{ chapter_data.translation }})</h2>
                     {% if chapter_data.chapter < total_chapters %}
-                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter + 1) }}" class="nav-buttons">&#x25B6;</a>
+                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter + 1) }}" class="nav-buttons"><img src="{{ url_for('static', filename='images/nextNav.png') }}" alt="next" style="max-width:50px; height: auto"></a>
                     {% else %}
                         <span></span>
                     {% endif %}
                 </div>
             </div>
+
+
+<!-- Chapter selection for the current book -->
+            <!-- <h3>Go to Chapter:</h3> -->
+            <div class="chapter-grid">
+                {% for i in range(1, total_chapters + 1) %}
+                    <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=i) }}" class="{% if i == chapter_data.chapter %}active-chapter{% endif %}">{{ i }}</a>
+
+                {% endfor %}
+                
+            </div>
+
+
+
+
 
             <div class="chapter-content">
                 {% for verse in chapter_data.verses %}
@@ -636,13 +690,15 @@
                 {% endfor %}
             </div>
 
-            <!-- Chapter selection for the current book -->
+<!-- 
+             Chapter selection for the current book 
             <h3>Go to Chapter:</h3>
             <div class="chapter-grid">
                 {% for i in range(1, total_chapters + 1) %}
                     <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=i) }}">{{ i }}</a>
                 {% endfor %}
-            </div>
+            </div> -->
+
 
             <!-- Link back to list of books -->
             <p style="text-align: center; margin-top: 30px;">
@@ -679,6 +735,7 @@
     <div class="overlay" onclick="toggleSidebar()"></div>
 
         <script>
+
         // Generic function to toggle dropdowns
         // function toggleTestamentDropdown(event, listId) {
         //     event.stopPropagation(); // Prevent document click from closing immediately
