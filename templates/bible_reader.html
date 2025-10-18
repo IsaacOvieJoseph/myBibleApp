@@ -51,7 +51,7 @@
         }
 
         /* Hamburger menu icon */
-        .hamburger-icon , .close-sidebar, #start-reading {
+        .hamburger-icon , .close-sidebar, #start-reading {   
             font-size: 2em;
             cursor: pointer;
             color: var(--nav-link-color);
@@ -106,10 +106,9 @@
             #start-reading{
                 display: block;
                 justify-self: center;
-                width: 80%;
+                width: 100%;
                 height: auto;
                 font-size: medium;
-
             }
 
             .header {
@@ -375,6 +374,7 @@
             min-width: unset; /* Remove explicit min-width to allow more flexibility */
             max-width: 100%; /* Ensure it doesn't overflow parent */
             box-sizing: border-box; /* Include padding and border in the element's total width */
+            margin-left: 5px;
         }
 
         /* Ensure select group wraps on smaller screens */
@@ -387,6 +387,15 @@
             .chapter-header-controls select {
                 width: 100%; /* Take full width in column layout */
             }
+
+            #start-reading{
+                display: block;
+                justify-self: center;
+                width: 100%;
+                height: auto;
+                font-size: small;
+            }
+
         }
 
         /* New styles for book selection dropdowns */
@@ -655,14 +664,14 @@ hr {
                 </div>    
                 <div class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
                     {% if chapter_data.chapter > 1 %}
-                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto"></a>
+                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto; width: 30%"></a>
                     {% else %}
                         <span></span>
                     {% endif %}
                     <h2>{{ chapter_data.book_name }} {{ chapter_data.chapter }} </h2>
                     
                     {% if chapter_data.chapter < total_chapters %}
-                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter + 1) }}" class="nav-buttons"><img src="{{ url_for('static', filename='images/nextNav.png') }}" alt="next" style="max-width:50px; height: auto"></a>
+                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter + 1) }}" class="nav-buttons"><img src="{{ url_for('static', filename='images/nextNav.png') }}" alt="next" style="max-width:50px; height: auto; width: 50%"></a>
                     {% else %}
                         <span></span>
                     {% endif %}
@@ -717,12 +726,14 @@ hr {
             Your personal companion for reading, exploring, and reflecting on the Word of God.  
             Choose your preferred translation and start exploring any book or chapter of the Bible.
         </p>
-        <div id="start-reading" style="margin-top: 30px;">
-            <a href="#sidebar" onclick="toggleSidebar()" 
+        <div id="start-reading" style="margin-top: 30px;">     <!-- will be changed to Get started for daily verse -->
+            <a onclick="studyPal()" 
                style="display: inline-block; background-color: var(--primary-color); color: white; 
                       padding: 12px 25px; border-radius: 8px; text-decoration: none; 
                       font-weight: 600; transition: background-color 0.3s ease;">
-                📖 Start Reading
+                <!-- 📖 Get Started -->
+                📖 Open Bible
+
             </a>
         </div>
     </div>
@@ -734,6 +745,8 @@ hr {
 
     <!-- Overlay for mobile sidebar -->
     <div class="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- <footer>Developed by Isaac Joseph</footer> -->
 
         <script>
 
@@ -860,29 +873,29 @@ function toggleTestamentDropdown(event, listId) {
                 });
 
                 // Attempt to pre-select the currently viewed book
-                var currentBookName = "{{ book if book else '' }}";
-                if (currentBookName) {
-                    const oldTestamentToggle = document.querySelector('#old_testament_books_chapter_list').previousElementSibling;
-                    const newTestamentToggle = document.querySelector('#new_testament_books_chapter_list').previousElementSibling;
+                // var currentBookName = "{{ book if book else '' }}";
+                // if (currentBookName) {
+                //     const oldTestamentToggle = document.querySelector('#old_testament_books_chapter_list').previousElementSibling;
+                //     const newTestamentToggle = document.querySelector('#new_testament_books_chapter_list').previousElementSibling;
 
-                    if (categorizedBooks['Old Testament'].some(b => b.name === currentBookName)) {
-                        // Find the anchor for the current book and potentially highlight it
-                        const currentBookAnchor = oldTestamentList.querySelector(`a[href$="/${currentBookName}/${currentChapter}"]`);
-                        if (currentBookAnchor) {
-                            currentBookAnchor.classList.add('active-book'); // Add a class for highlighting
-                        }
-                        // Automatically open the Old Testament dropdown if the current book is in it
-                        oldTestamentList.classList.add('show');
-                        if (oldTestamentToggle) oldTestamentToggle.innerHTML = oldTestamentToggle.textContent.replace(' &#x25BC;', ' &#x25B2;');
-                    } else if (categorizedBooks['New Testament'].some(b => b.name === currentBookName)) {
-                        const currentBookAnchor = newTestamentList.querySelector(`a[href$="/${currentBookName}/${currentChapter}"]`);
-                        if (currentBookAnchor) {
-                            currentBookAnchor.classList.add('active-book');
-                        }
-                        newTestamentList.classList.add('show');
-                        if (newTestamentToggle) newTestamentToggle.innerHTML = newTestamentToggle.textContent.replace(' &#x25BC;', ' &#x25B2;');
-                    }
-                }
+                //     if (categorizedBooks['Old Testament'].some(b => b.name === currentBookName)) {
+                //         // Find the anchor for the current book and potentially highlight it
+                //         const currentBookAnchor = oldTestamentList.querySelector(`a[href$="/${currentBookName}/${currentChapter}"]`);
+                //         if (currentBookAnchor) {
+                //             currentBookAnchor.classList.add('active-book'); // Add a class for highlighting
+                //         }
+                //         // Automatically open the Old Testament dropdown if the current book is in it
+                //         oldTestamentList.classList.add('show');
+                //         if (oldTestamentToggle) oldTestamentToggle.innerHTML = oldTestamentToggle.textContent.replace(' &#x25BC;', ' &#x25B2;');
+                //     } else if (categorizedBooks['New Testament'].some(b => b.name === currentBookName)) {
+                //         const currentBookAnchor = newTestamentList.querySelector(`a[href$="/${currentBookName}/${currentChapter}"]`);
+                //         if (currentBookAnchor) {
+                //             currentBookAnchor.classList.add('active-book');
+                //         }
+                //         newTestamentList.classList.add('show');
+                //         if (newTestamentToggle) newTestamentToggle.innerHTML = newTestamentToggle.textContent.replace(' &#x25BC;', ' &#x25B2;');
+                //     }
+                // }
 
             } catch (error) {
                 console.error('Error fetching categorized books:', error);
@@ -984,6 +997,12 @@ function toggleTestamentDropdown(event, listId) {
       window.location.href = `/${selectedTranslation}/${currentBook}/${currentChapter}`;
     });
     {% endif %}
+    
+        function studyPal() {
+            // window.location.href = `/preferences`;
+            window.location.href = `/kjv/Genesis/1`
+        }
+
         </script>
 </body>
 </html>
