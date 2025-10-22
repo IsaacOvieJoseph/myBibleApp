@@ -30,13 +30,16 @@
             display: flex; /* Use flexbox for main layout */
             min-height: 100vh; /* Full viewport height */
             flex-direction: column; /* Stack header, sidebar, and content */
+            overflow: hidden;
         }
 
         .header {
-            background-color: var(--header-bg);
+            /* background-color: var(--header-bg);
+            color: white; */
+            background-color: #e8f9e9;;
             color: white;
             padding: 15px 20px;
-            display: flex;
+            display: none;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -54,8 +57,9 @@
         .hamburger-icon , .close-sidebar, #start-reading {   
             font-size: 2em;
             cursor: pointer;
-            color: var(--nav-link-color);
-            margin-left: 20px; /* Space from logo */
+            /* color: var(--nav-link-color); */
+            color: #416b46;
+            margin-left: 15px; /* Space from logo */
             display: none; /* Hidden by default on larger screens */
         }
 
@@ -65,6 +69,7 @@
             flex-grow: 1; /* Allow app-layout to take remaining vertical space */
             position: relative; /* For sidebar absolute positioning on mobile */
             justify-content: flex-start; /* Ensure sidebar starts on the left */
+            overflow-y: hidden;
         }
 
         /* Sidebar styles */
@@ -79,6 +84,8 @@
             flex-direction: column;
             gap: 20px;
             border-right: 1px solid var(--border-color);
+
+            height: 100vh;
         }
 
         #main-content {
@@ -97,11 +104,60 @@
 } */
 
 
+#toast-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column-reverse; /* New toasts appear above older ones */
+    gap: 10px;
+    z-index: 1000;
+    /* padding: 15px; */
+}
+
+.toast {
+    background-color: #5c9170;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 1.0s ease-in-out;
+    min-width: 200px;
+    text-align: center;
+    width: 50%
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+
+
+
         /* Media queries for responsiveness */
         @media (max-width: 768px) {
             body {
                 flex-direction: column; /* Stack header, sidebar, and content */
             }
+
+            /* .container {
+                margin: 0;
+                height: 70%;
+            } */
+             
+
+            #toast-container {
+    position: fixed;
+    top: 50%;
+    left: 20%;
+    display: flex;
+    flex-direction: column-reverse; /* New toasts appear above older ones */
+    gap: 10px;
+    z-index: 1000;
+    /* padding: 15px; */
+}
+
+
 
             #start-reading{
                 display: block;
@@ -114,6 +170,8 @@
             .header {
                 order: -1; /* Ensure header is always at the top */
                 justify-content: space-between; /* Space out title and hamburger */
+                padding: 5px;
+                display: flex;
             }
 
             .header h1 {
@@ -148,7 +206,11 @@
 
             #main-content {
                 margin-left: 0; /* No margin when sidebar is hidden */
+                height: 100%;
+                overflow: hidden;
             }
+
+            
         }
 
         /* Overlay for when sidebar is open on mobile */
@@ -191,11 +253,13 @@
 
         .container {
             max-width: 900px;
-            margin: 30px auto;
+            margin: -10px auto;
             background-color: var(--card-background);
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 20px var(--shadow-light);
+            height: 90vh;
+            overflow-y: auto;
         }
 
         .chapter-navigation {
@@ -433,6 +497,7 @@
             }
         }
 
+
         /* Styles for collapsible testament dropdowns */
         .testament-dropdown {
             position: relative;
@@ -549,8 +614,9 @@ hr {
 </head>
 <body>
     <div class="header">
-        
         <div class="hamburger-icon" onclick="toggleSidebar()">&#9776;</div> <!-- Updated onclick -->
+         
+
     </div>
 
     <div class="app-layout">
@@ -577,15 +643,10 @@ hr {
                 <noscript><button type="submit">Go</button></noscript>
             </form>
 
-
-
-
-
-
                 <div class="book-selection-dropdowns">
                     <div class="testament-dropdown">
                         <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_list')">Old Testament</button>
-                        <ul id="old_testament_books_list" class="dropdown-content">
+                        <ul id="old_testament_books_list" class="dropdown-content" style="overflow-y: auto; height: 150px">
                             {% for book in books['Old Testament'] %}
                                 <li><a href="{{ url_for('view_chapter', translation_name=request.args.get('translation', 'KJV'), book_name=book.name, chapter_number=1) }}">{{ book.name }}</a></li>
                             {% endfor %}
@@ -595,7 +656,7 @@ hr {
 
                     <div class="testament-dropdown">
                         <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_list')">New Testament</button>
-                        <ul id="new_testament_books_list" class="dropdown-content">
+                        <ul id="new_testament_books_list" class="dropdown-content" style="overflow-y: auto; height: 150px">
                             {% for book in books['New Testament'] %}
                                 <li><a href="{{ url_for('view_chapter', translation_name=request.args.get('translation', 'KJV'), book_name=book.name, chapter_number=1) }}">{{ book.name }}</a></li>
                             {% endfor %}
@@ -603,8 +664,9 @@ hr {
                     </div> <hr>
                 </div> 
             {% else %}
-          {#      <p>No books available for the selected translation. Please choose another.</p> #}
-
+          
+            {# <p>No books available for the selected translation. Please choose another.</p> #}
+            
 
 
           <div class="select-group">
@@ -617,21 +679,18 @@ hr {
 
                          <div class="testament-dropdown">
                                 <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament</button>
-                                <ul id="old_testament_books_chapter_list" class="dropdown-content">
+                                <ul id="old_testament_books_chapter_list" class="dropdown-content" style="overflow-y: auto; height: 150px">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
                             </div>  <hr>
 
                             <div class="testament-dropdown">
                                 <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_chapter_list')">New Testament</button>
-                                <ul id="new_testament_books_chapter_list" class="dropdown-content">
+                                <ul id="new_testament_books_chapter_list" class="dropdown-content" style="overflow-y: auto; height: 150px">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
                             </div>  <hr>
                 </div>    
-
-
-
 
             {% endif %}
         </aside>
@@ -669,7 +728,8 @@ hr {
                     {% else %}
                         <span></span>
                     {% endif %}
-                    <h2>{{ chapter_data.book_name }} {{ chapter_data.chapter }} </h2>
+                    <!-- ********************************************  -->
+                    <h2>{{ chapter_data.book_name }} </h2>
                     
                     {% if chapter_data.chapter < total_chapters %}
                         <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter + 1) }}" class="nav-buttons"><img src="{{ url_for('static', filename='images/nextNav.png') }}" alt="next" style="max-width:50px; height: auto; width: 50%"></a>
@@ -691,10 +751,6 @@ hr {
                 
             </div>
 
-
-
-
-
             <div class="chapter-content" style="text-align: justify;">
                 {% for verse in chapter_data.verses %}
                     <p><span class="verse-number">{{ verse.verse }}.</span> {{ verse.text | safe }}</p>
@@ -711,14 +767,71 @@ hr {
             </div> -->
 
 
-            <!-- Link back to list of books -->
-            <p style="text-align: center; margin-top: 30px;">
-                <a href="{{ url_for('bible_reader') }}?translation={{ translation }}" class="cta-button" style="display: inline-block; width: auto;">Back to Books</a>
-            </p>
+                <div class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
+                    {% if chapter_data.chapter > 1 %}
+                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto; width: 50%"></a>
+                    {% else %}
+                        <span></span>
+                    {% endif %}
+                    <h2>{{ chapter_data.book_name }} {{ chapter_data.chapter }} </h2>
+                    
+                    {% if chapter_data.chapter < total_chapters %}
+                        <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter + 1) }}" class="nav-buttons"><img src="{{ url_for('static', filename='images/nextNav.png') }}" alt="next" style="max-width:50px; height: auto; width: 50%"></a>
+                    {% else %}
+                        <span></span>
+                    {% endif %}
+                </div>
 
+
+
+
+            <!-- Link back to list of books
+            <p style="text-align: center; margin-top: 30px;">
+                <a href="#" class="cta-button" style="display: inline-block; width: auto;">Top</a>
+                 <a href="{{ url_for('bible_reader') }}?translation={{ translation }}" class="cta-button" style="display: inline-block; width: auto;">Back to Home</a> 
+            </p> -->
+
+{% elif translation %}
+            
+        <!-- Overlay for mobile sidebar -->
+    <div class="overlay" onclick="toggleSidebar()"></div>
+     <div id="toast-container"></div>
+    <script>
+        window.location.href = `/kjv/{{Genesis}}{{book}}/{{chapter}}`
+ function showToast(message, duration = 5000) {
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        console.error("Toast container not found. Please add <div id='toast-container'></div> to your HTML.");
+        return;
+    }
+
+    const toastElement = document.createElement('div');
+    toastElement.classList.add('toast');
+    toastElement.textContent = message;
+
+    toastContainer.appendChild(toastElement);
+
+    // Show the toast
+    setTimeout(() => {
+        toastElement.classList.add('show');
+    }, 100); // Small delay to allow CSS transition to work
+
+    // Hide and remove the toast after a duration
+    setTimeout(() => {
+        toastElement.classList.remove('show');
+        setTimeout(() => {
+            toastContainer.removeChild(toastElement);
+        }, 3000); // Wait for fade-out transition
+    }, duration);
+}   
+      
+            showToast(`{{translation}} translation is currently not available`,5000);    // toast feedback on unavailable translation
+    </script>
 
 
  {% else %}
+
+ </script>
     <div class="welcome-section" style="text-align: center; padding: 50px 20px;">
         <h1 style="font-family: 'Merriweather', serif; color: var(--primary-color); font-size: 2.2em; margin-bottom: 15px;">
             Welcome to BibleStudyPal
@@ -744,8 +857,7 @@ hr {
         </main>
     </div>
 
-    <!-- Overlay for mobile sidebar -->
-    <div class="overlay" onclick="toggleSidebar()"></div>
+
 
     <!-- <footer>Developed by Isaac Joseph</footer> -->
 
@@ -900,6 +1012,7 @@ function toggleTestamentDropdown(event, listId) {
 
             } catch (error) {
                 console.error('Error fetching categorized books:', error);
+                // showToast("errrro",300);
             }
 
             // Helper function to handle book selection from dropdowns and navigate
@@ -925,6 +1038,7 @@ function toggleTestamentDropdown(event, listId) {
                         updateBookAndChapterNav();
                     }
                 }
+                
 
             // Call updateBookAndChapterNav on initial load for the main sidebar book selection
             const mainTranslationSelector = document.getElementById('translation_selector');
@@ -990,19 +1104,60 @@ function toggleTestamentDropdown(event, listId) {
     {% if chapter_data is defined %}
     const translationSelect = document.getElementById("translation_select");
 
-    translationSelect.addEventListener("change", function() {
+    try{translationSelect.addEventListener("change", function() {
       const selectedTranslation = this.value;
       const currentBook = "{{ book }}";
       const currentChapter = "{{ chapter_data.chapter }}";
-      console.log(currentBook)
+      console.log(`${ selectedTranslation } of ${currentChapter}`)
       window.location.href = `/${selectedTranslation}/${currentBook}/${currentChapter}`;
-    });
+    })} catch(error){
+        const selectedTranslation = this.value
+    }
+
     {% endif %}
     
         function studyPal() {
             // window.location.href = `/preferences`;
             window.location.href = `/kjv/Genesis/1`
         }
+
+
+function showToast(message, duration = 3000) {
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        console.error("Toast container not found. Please add <div id='toast-container'></div> to your HTML.");
+        return;
+    }
+
+    const toastElement = document.createElement('div');
+    toastElement.classList.add('toast');
+    toastElement.textContent = message;
+
+    toastContainer.appendChild(toastElement);
+
+    // Show the toast
+    setTimeout(() => {
+        toastElement.classList.add('show');
+    }, 10); // Small delay to allow CSS transition to work
+
+    // Hide and remove the toast after a duration
+    setTimeout(() => {
+        toastElement.classList.remove('show');
+        setTimeout(() => {
+            toastContainer.removeChild(toastElement);
+        }, 300); // Wait for fade-out transition
+    }, duration);
+}
+
+// Example usage:
+// showToast("This is a success message!", 4000);
+
+    function stay(){
+        window.location.href = `/kjv`
+
+    }
+
+
 
         </script>
 </body>
