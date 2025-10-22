@@ -682,14 +682,14 @@ hr {
 
                          <div class="testament-dropdown">
                                 <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'old_testament_books_chapter_list')">Old Testament</button>
-                                <ul id="old_testament_books_chapter_list" class="dropdown-content" style="overflow-y: auto; height: 150px">
+                                <ul id="old_testament_books_chapter_list" class="dropdown-content" style="overflow-y: auto; height: 250px">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
                             </div>  <hr>
 
                             <div class="testament-dropdown">
                                 <button type="button" class="dropdown-toggle" onclick="toggleTestamentDropdown(event, 'new_testament_books_chapter_list')">New Testament</button>
-                                <ul id="new_testament_books_chapter_list" class="dropdown-content" style="overflow-y: auto; height: 150px">
+                                <ul id="new_testament_books_chapter_list" class="dropdown-content" style="overflow-y: auto; height: 250px">
                                     <!-- Books will be populated by JavaScript -->
                                 </ul>
                             </div>  <hr>
@@ -757,16 +757,10 @@ hr {
                 {% for verse in chapter_data.verses %}
                     <p><span class="verse-number">{{ verse.verse }}.</span> {{ verse.text | safe }}</p>
                 {% endfor %}
-            </div>
-<!-- 
-             Chapter selection for the current book 
-            <h3>Go to Chapter:</h3>
-            <div class="chapter-grid">
-                {% for i in range(1, total_chapters + 1) %}
-                    <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=i) }}">{{ i }}</a>
-                {% endfor %}
-            </div> -->
-                <div class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
+                
+<!-- Bottom Navigation -->
+
+                <div style="" class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
                     {% if chapter_data.chapter > 1 %}
                         <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto; width: 50%"></a>
                     {% else %}
@@ -780,8 +774,16 @@ hr {
                         <span></span>
                     {% endif %}
                 </div>
-
-
+            </div>
+<!-- 
+             Chapter selection for the current book 
+            <h3>Go to Chapter:</h3>
+            <div class="chapter-grid">
+                {% for i in range(1, total_chapters + 1) %}
+                    <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=i) }}">{{ i }}</a>
+                {% endfor %}
+            </div> -->
+                
 
 
             <!-- Link back to list of books
