@@ -90,7 +90,7 @@
 
         #main-content {
             flex-grow: 1;
-            padding: 20px;
+            /* padding: 20px; */
             overflow-y: auto; /* Allow scrolling for main content */
             background-color: white; /* Ensure main content is white */
         }
@@ -140,11 +140,10 @@
                 flex-direction: column; /* Stack header, sidebar, and content */
             }
 
-            /* .container {
+            .container {
                 margin: 0;
-                height: 70%;
-            } */
-             
+                height: 90vh;
+            }             
 
             #toast-container {
     position: fixed;
@@ -256,9 +255,9 @@
             margin: -10px auto;
             background-color: var(--card-background);
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 10px;
             box-shadow: 0 4px 20px var(--shadow-light);
-            height: 90vh;
+            height: 100vh;
             overflow-y: auto;
         }
 
@@ -409,8 +408,8 @@
             display: flex;
             flex-direction: column;
             /* gap: 15px; */
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
         }
 
         .chapter-header-controls .select-group {
@@ -495,6 +494,10 @@
             .book-selection-dropdowns label {
                 flex-basis: auto; /* Revert to auto on larger screens */
             }
+        }
+
+        @media screen {
+            
         }
 
 
@@ -750,13 +753,11 @@ hr {
                 {% endfor %}
                 
             </div>
-
             <div class="chapter-content" style="text-align: justify;">
                 {% for verse in chapter_data.verses %}
                     <p><span class="verse-number">{{ verse.verse }}.</span> {{ verse.text | safe }}</p>
                 {% endfor %}
             </div>
-
 <!-- 
              Chapter selection for the current book 
             <h3>Go to Chapter:</h3>
@@ -765,8 +766,6 @@ hr {
                     <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=i) }}">{{ i }}</a>
                 {% endfor %}
             </div> -->
-
-
                 <div class="chapter-navigation" style="border-bottom: none; padding-bottom: 0;">
                     {% if chapter_data.chapter > 1 %}
                         <a href="{{ url_for('view_chapter', translation_name=translation, book_name=book, chapter_number=chapter_data.chapter - 1) }}" class="nav-buttons"> <img src="{{ url_for('static', filename='images/previousNav.png') }}" alt="previous" style="max-width:50px; height: auto; width: 50%"></a>
@@ -856,10 +855,6 @@ hr {
             </div>
         </main>
     </div>
-
-
-
-    <!-- <footer>Developed by Isaac Joseph</footer> -->
 
         <script>
 
